@@ -9,7 +9,7 @@ public class FunctionalityMainClass {
     private List<BlockBuster> blockBusterList;
     private String year;
     private String releaseDate;
-
+    private List<MovieInfo> movieInfoList = new ArrayList<>();
 
     public static void main(String[] args) {
         FunctionalityMainClass functionalityClass = new FunctionalityMainClass();
@@ -18,7 +18,7 @@ public class FunctionalityMainClass {
         functionalityClass.insertDummyFoodStoreData();
         functionalityClass.insertDummyAverageCostData();
         functionalityClass.insertDummyBlockBusterData();
-        for (int i = 0; i < functionalityClass.getAllMovies().size(); i++) {
+        /*for (int i = 0; i < functionalityClass.getAllMovies().size(); i++) {
             System.out.println("All Movie Name :- " + functionalityClass.getAllMovies().get(i));
         }
         for (int i = 0; i < functionalityClass.getSpecificTypeMovie("Hollywood").size(); i++) {
@@ -41,17 +41,102 @@ public class FunctionalityMainClass {
             System.out.println("Movie name :- " + functionalityClass.getAllMovies().get(i)
                     + "  blockbuster :- " + functionalityClass.blockBusterList.get(i).isIs_movie_blockbuster()
             );
+        }*/
+        for (MovieInfo movieInfo : functionalityClass.getAllMoviesInfo()) {
+            System.out.println("  Movie Name : " + movieInfo.getMovieName()
+                    + "  Movie Genre: " + movieInfo.getGenre()
+                    + "  Free Food: " + movieInfo.getFoodStore()
+                    + "  Movie Language: " + movieInfo.getLanguage()
+                    + "  Movie Type: " + movieInfo.getType()
+                    + "  Movie Average Production Cost: " + movieInfo.getAverageProductionCost()
+                    + "  Movie BlockBuster : " + movieInfo.isBlockBuster()
+                    + "  Movie Year: " + movieInfo.getYear()
+                    + "  Movie Release Date : " + movieInfo.getReleaseDate());
         }
+        System.out.println("After selecting one of movie.");
+        for (MovieInfo movieInfo : functionalityClass.getSpecificTypeMovieInfo("Hollywood")) {
+            System.out.println("  Movie Name : " + movieInfo.getMovieName()
+                    + "  Movie Genre: " + movieInfo.getGenre()
+                    + "  Free Food: " + movieInfo.getFoodStore()
+                    + "  Movie Language: " + movieInfo.getLanguage()
+                    + "  Movie Type: " + movieInfo.getType()
+                    + "  Movie Average Production Cost: " + movieInfo.getAverageProductionCost()
+                    + "  Movie BlockBuster : " + movieInfo.isBlockBuster()
+                    + "  Movie Year: " + movieInfo.getYear()
+                    + "  Movie Release Date : " + movieInfo.getReleaseDate());
+        }
+    }
+
+    public List<MovieInfo> getAllMoviesInfo() {
+        movieInfoList.clear();
+        for (Movie movie : movieList) {
+            float averageProductionCost = getAverageProductionCost(getMovieType(movie.getMovieId()));
+            String movieType = getMovieType(movie.getMovieId());
+            String FreeDish = getFoodDish(getMovieType(movie.getMovieId()));
+            boolean blockBuster = isBlockBusterOrNot(movie.getMovieId());
+            MovieInfo movieInfo = new MovieInfo(
+                    movie.getName()
+                    , movie.getYear()
+                    , movie.getLanguage()
+                    , movie.getGenre()
+                    , movie.getReleaseDate()
+                    , movieType
+                    , averageProductionCost
+                    , FreeDish
+                    , blockBuster);
+            movieInfoList.add(movieInfo);
+        }
+        return movieInfoList;
+    }
+
+    public List<MovieInfo> getSpecificTypeMovieInfo(String type) {
+        movieInfoList.clear();
+        for (Movie movie : movieList) {
+            float averageProductionCost = getAverageProductionCost(getMovieType(movie.getMovieId()));
+            String FreeDish = getFoodDish(getMovieType(movie.getMovieId()));
+            boolean blockBuster = isBlockBusterOrNot(movie.getMovieId());
+            if (type.equals(getMovieType(movie.getMovieId()))) {
+                MovieInfo movieInfo = new MovieInfo(
+                        movie.getName()
+                        , movie.getYear()
+                        , movie.getLanguage()
+                        , movie.getGenre()
+                        , movie.getReleaseDate()
+                        , type
+                        , averageProductionCost
+                        , FreeDish
+                        , blockBuster);
+                movieInfoList.add(movieInfo);
+            }
+        }
+        return movieInfoList;
     }
 
     public List<String> getAllMovies() {
         List<String> nameList = new ArrayList<>();
+        movieInfoList = new ArrayList<>();
         for (Movie movie : movieList) {
+            float averageProductionCost = getAverageProductionCost(getMovieType(movie.getMovieId()));
+            String movieType = getMovieType(movie.getMovieId());
+            String FreeDish = getFoodDish(getMovieType(movie.getMovieId()));
+            boolean blockBuster = isBlockBusterOrNot(movie.getMovieId());
+            MovieInfo movieInfo = new MovieInfo(
+                    movie.getName()
+                    , movie.getYear()
+                    , movie.getLanguage()
+                    , movie.getGenre()
+                    , movie.getReleaseDate()
+                    , movieType
+                    , averageProductionCost
+                    , FreeDish
+                    , blockBuster);
+            movieInfoList.add(movieInfo);
             String movieName = movie.getName();
             nameList.add(movieName);
         }
         return nameList;
     }
+
 
     public List<String> getSpecificTypeMovie(String type) {
         List<String> nameList = new ArrayList<>();
@@ -64,6 +149,26 @@ public class FunctionalityMainClass {
                 }
             }
         }
+       /* movieInfoList = new ArrayList<>();
+        for (Movie movie : movieList) {
+            float averageProductionCost = getAverageProductionCost(getMovieType(movie.getMovieId());
+//            String movieType = getMovieType(movie.getMovieId());
+            String FreeDish = getFoodDish(getMovieType(movie.getMovieId()));
+            boolean blockBuster = isBlockBusterOrNot(movie.getMovieId());
+            if (type.equals(getMovieType(movie.getMovieId()))) {
+                MovieInfo movieInfo = new MovieInfo(
+                        movie.getName()
+                        , movie.getYear()
+                        , movie.getLanguage()
+                        , movie.getGenre()
+                        , movie.getReleaseDate()
+                        , type
+                        , averageProductionCost
+                        , FreeDish
+                        , blockBuster);
+                movieInfoList.add(movieInfo);
+            }
+        }*/
         return nameList;
     }
 
@@ -143,6 +248,43 @@ public class FunctionalityMainClass {
         foodStoreList.add(foodStore2);
         foodStoreList.add(foodStore3);
     }
+
+    private String getMovieType(int movieId) {
+        for (MovieType movieType : movieTypeList) {
+            if (movieType.getMovieId() == movieId) {
+                return movieType.getType();
+            }
+        }
+        return null;
+    }
+
+    private String getFoodDish(String type) {
+        for (FoodStore foodStore : foodStoreList) {
+            if (foodStore.getType().equals(type)) {
+                return foodStore.getDish();
+            }
+        }
+        return null;
+    }
+
+    private boolean isBlockBusterOrNot(int movieId) {
+        for (BlockBuster blockBuster : blockBusterList) {
+            if (blockBuster.getMovieId() == movieId) {
+                return blockBuster.isIs_movie_blockbuster();
+            }
+        }
+        return false;
+    }
+
+    private float getAverageProductionCost(String type) {
+        for (AverageCost averageCost : averageCostList) {
+            if (averageCost.getType().equals(type)) {
+                return averageCost.getAverage_cost_production();
+            }
+        }
+        return 0.0f;
+    }
+
 
     private void insertDummyMovieTypeData() {
         movieTypeList = new ArrayList<>();
